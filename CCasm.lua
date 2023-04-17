@@ -18,8 +18,4 @@ local asm = fs.open(args[1], 'r')
 local code = asm.readAll()
 asm.close()
 
-h = fs.open("tokens.asm.out", 'w')
-h.write(textutils.serialize(lex(code, general_error)))
-h.close()
-
 parse( lex(code, general_error) )
