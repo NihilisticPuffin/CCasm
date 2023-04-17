@@ -37,6 +37,30 @@ skip:
 ```
 The `out a` instruction will be skipped by the `jmp skip`
 
+## Macros
+Macros are defined using the `%macro` keyword followed by and identifier and closed with the `%end` keyword
+Macros are called with a % followed by the identifier
+```
+%macro hello
+    chr 72
+    chr 101
+    chr 108
+    chr 108
+    chr 111
+    chr 44
+    chr 32
+    chr 87
+    chr 111
+    chr 114
+    chr 108
+    chr 100
+    chr 33
+    chr 10
+%end
+
+%hello ; Prints 'Hello, World!' followed by a newline
+```
+
 ## Comments
 Comments in CCasm can be started with a semicolon (;) and continue until the end of the line
 
