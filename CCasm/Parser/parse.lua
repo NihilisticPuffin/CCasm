@@ -2,7 +2,7 @@ local switch = require "CCasm.util.switch"
 local instructions, keywords = require "CCasm.util.consts" ()
 
 
-return function(tokens, error_reporter)
+function parse(tokens, error_reporter)
     local register = {
         ['a'] = 0,
         ['b'] = 0,
@@ -13,6 +13,15 @@ return function(tokens, error_reporter)
     }
     local stack = {}
     local labels = {}
+    local macros = {}
+
+    local function rev(t)
+        local r = {}
+        for i = #t, 1, -1 do
+            r[#r+1] = t[i]
+        end
+        return r
+    end
 
     local function printt(tbl)
         print(textutils.serialize(tbl))
@@ -170,12 +179,27 @@ return function(tokens, error_reporter)
                 error("[Line: " .. i.line  .. "] Instruction " .. i.type .. " expects type of register or number", 0)
             end
         elseif i.type == instructions['dmp'] then
-            print( textutils.serialize(stack) )
+            printt( rev(stack) )
         elseif i.type == instructions['hlt'] then
             break
         elseif i.type == 'LABEL' then
+        elseif i.type == 'START' then
+            local name = advance()
+
+            local body = {}
+            local t = advance()
+            while t.type ~= 'END' do
+                table.insert(body, t)
+                t = advance()
+            end
+            macros[name.lexeme] = body
+        elseif i.type == 'MACRO' then
+            if not macros[i.lexeme] then error("[Line: " .. i.line  .. "] Undefined macro " .. i.lexeme, 0) end
+            parse( macros[i.lexeme] )
         else
             error("[Line: " .. i.line  .. "] Unexpected " .. i.type .. " " .. i.lexeme, 0)
         end
     end
 end
+
+return parse
