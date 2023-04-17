@@ -4,22 +4,22 @@ An assembly language for computercraft
 CCasm has 20 instructions
 |  Instruction | Use  |
 | ------------ | ------------ |
-| set reg val | Sets the value of a register |
-| mov reg_a reg_b | Copies the value of reg_a into reg_b |
-| psh val | Pushes a value onto the stack |
+| set [reg] [val] | Sets the value of a register |
+| mov [reg_a] [reg_b] | Copies the value of reg_a into reg_b |
+| psh [val] | Pushes a value onto the stack |
 | pop | Pops a value off the stack |
-| str reg | Stores the value of a register onto the stack |
-| ldr reg | Pops the top value off the stack and stores into register |
+| str [reg] | Stores the value of a register onto the stack |
+| ldr [reg] | Pops the top value off the stack and stores into register |
 | add | Pops the top two values off the stack, adds them and pushes the result onto the stack |
 | sub | Pops the top two values off the stack, subtracts them and pushes the result onto the stack |
 | mul | Pops the top two values off the stack, multiplies them and pushes the result onto the stack |
 | div | Pops the top two values off the stack, divides them and pushes the result onto the stack |
 | mod | Pops the top two values off the stack, preforms a modulo operation and pushes the result onto the stack |
-| cmp reg [reg:val] | Compares the value of a register with another register or value |
+| cmp [reg] [reg:val] | Compares the value of a register with another register or value |
 | jmp [reg:val:label] | Jumps to the line number of register or value or to a lable if top value of stack is not zero |
 | jne [reg:val:label] | Jumps to the line number of register or value or to a lable if top value of stack is zero |
-| utc reg | Sets value of register to number of milliseconds since UNIX Epoch |
-| slp val | Sleeps for given number of seconds |
+| utc [reg] | Sets value of register to number of milliseconds since UNIX Epoch |
+| slp [val] | Sleeps for given number of seconds |
 | dmp | Dumps stack to console for debugging |
 | chr [reg:val] | Outputs the value or register as  |
 | out [reg:val] | Outputs the value or register |
