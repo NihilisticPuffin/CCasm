@@ -35,7 +35,7 @@ jmp skip
 out a
 skip:
 ```
-The `out a` instruction will be skipped by the `jump skip`
+The `out a` instruction will be skipped by the `jmp skip`
 
 ## Comments
 Comments in CCasm can be started with a semicolon (;) and continue until the end of the line
