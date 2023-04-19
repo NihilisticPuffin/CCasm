@@ -1,10 +1,11 @@
 local switch = require "CCasm.util.switch"
 local lex = require "CCasm.Lexer.lex"
+local Token = require "CCasm.Lexer.Token"
 local instructions, keywords = require "CCasm.util.consts" ()
 
 
 function parse(tokens, error_reporter)
-    function sub_parse(tokens)
+    local function sub_parse(tokens)
         local tmp = register['ip']
         register['ip'] = 1
         parse( tokens )
@@ -49,12 +50,27 @@ function parse(tokens, error_reporter)
         end
     end
 
-    function jmp_line(line)
+    local function jmp_line(line)
         for k, v in ipairs(tokens) do
             if v.line == line then
                 register['ip'] = k
                 break
             end
+        end
+    end
+
+    local function handle_jump(val)
+        if isRegister(val.lexeme) then
+            if type(register[val.lexeme]) == 'table' then
+                if register[val.lexeme].type == 'NULL' then error("[Line: " .. i.line  .. "] Cannont jump to NULL", 0) end
+            end
+            jmp_line(register[val.lexeme])
+        elseif labels[val.lexeme] then
+            register['ip'] = labels[val.lexeme]
+        elseif val.type == 'NUMBER' then
+            jmp_line(val.literal)
+        else
+            error("[Line: " .. i.line  .. "] Instruction " .. i.type .. " expects type of register, number, or label", 0)
         end
     end
 
@@ -65,22 +81,46 @@ function parse(tokens, error_reporter)
             local reg = advance()
             assertRegister(reg.lexeme)
             local val = advance()
-            register[reg.lexeme] = val.literal
+            if val.type == 'NULL' then
+                register[reg.lexeme] = Token('NULL')
+            else
+                register[reg.lexeme] = val.literal
+            end
+        elseif i.type == instructions['cpy'] then
+            local reg_a = advance()
+            local reg_b = advance()
+            assertRegister(reg_a.lexeme, reg_b.lexeme)
+            register[reg_b.lexeme] = register[reg_a.lexeme]
         elseif i.type == instructions['mov'] then
             local reg_a = advance()
             local reg_b = advance()
             assertRegister(reg_a.lexeme, reg_b.lexeme)
             register[reg_b.lexeme] = register[reg_a.lexeme]
+            register[reg_a.lexeme] = Token('NULL')
         elseif i.type == instructions['psh'] then
             local val = advance()
-            if not val.type == 'NUMBER' then error("[Line: " .. i.line  .. "] Instruction " .. i.type .. " expects type of number", 0) end
-            table.insert(stack, val.literal)
+            if val.type ~= 'NUMBER' or not isRegister(val.lexeme) then error("[Line: " .. i.line  .. "] Instruction " .. i.type .. " expects type of register or number", 0) end
+            if isRegister(val.lexeme) then
+                table.insert(stack, register[reg.lexeme])
+            else
+                table.insert(stack, val.literal)
+            end
         elseif i.type == instructions['pop'] then
             table.remove(stack)
+        elseif i.type == instructions['dup'] then
+            table.insert(stack, stack[#stack])
+        elseif i.type == instructions['swp'] then
+            local tmp = stack[#stack]
+            stack[#stack] = stack[#stack-1]
+            stack[#stack-1] = tmp
         elseif i.type == instructions['str'] then
             local reg = advance()
             assertRegister(reg.lexeme)
+            if type(register[reg.lexeme]) == 'table' then
+                if register[reg.lexeme].type == 'NULL' then error("[Line: " .. i.line  .. "] Cannont store type NULL", 0) end
+            end
             table.insert(stack, register[reg.lexeme])
+            register[reg.lexeme] = Token('NULL')
         elseif i.type == instructions['ldr'] then
             local reg = advance()
             assertRegister(reg.lexeme)
@@ -118,40 +158,16 @@ function parse(tokens, error_reporter)
             end
         elseif i.type == instructions['jmp'] then
             local val = advance()
-            if isRegister(val.lexeme) then
-                jmp_line(register[val.lexeme])
-            elseif labels[val.lexeme] then
-                register['ip'] = labels[val.lexeme]
-            elseif val.type == 'NUMBER' then
-                jmp_line(val.literal)
-            else
-                error("[Line: " .. i.line  .. "] Instruction " .. i.type .. " expects type of register, number, or label", 0)
-            end
+            handle_jump(val)
         elseif i.type == instructions['jeq'] then
             local val = advance()
             if table.remove(stack) ~= 0 then
-                if isRegister(val.lexeme) then
-                    jmp_line(register[val.lexeme])
-                elseif labels[val.lexeme] then
-                    register['ip'] = labels[val.lexeme]
-                elseif val.type == 'NUMBER' then
-                    jmp_line(val.literal)
-                else
-                    error("[Line: " .. i.line  .. "] Instruction " .. i.type .. " expects type of register, number, or label", 0)
-                end
+                handle_jump(val)
             end
         elseif i.type == instructions['jne'] then
             local val = advance()
             if table.remove(stack) == 0 then
-                if isRegister(val.lexeme) then
-                    jmp_line(register[val.lexeme])
-                elseif labels[val.lexeme] then
-                    register['ip'] = labels[val.lexeme] + 1
-                elseif val.type == 'NUMBER' then
-                    jmp_line(val.literal)
-                else
-                    error("[Line: " .. i.line  .. "] Instruction " .. i.type .. " expects type of register, number, or label", 0)
-                end
+                handle_jump(val)
             end
         elseif i.type == instructions['slp'] then
             local val = advance()

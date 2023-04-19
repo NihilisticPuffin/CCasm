@@ -1,11 +1,12 @@
 local lex = require "CCasm.Lexer.lex"
+local Token = require "CCasm.Lexer.Token"
 local parse = require "CCasm.Parser.parse"
 register = {
-    ['a'] = 0,
-    ['b'] = 0,
-    ['c'] = 0,
-    ['d'] = 0,
-    ['e'] = 0,
+    ['a'] = Token('NULL'),
+    ['b'] = Token('NULL'),
+    ['c'] = Token('NULL'),
+    ['d'] = Token('NULL'),
+    ['e'] = Token('NULL'),
     ['ip'] = 1,
 }
 stack = {}

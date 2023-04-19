@@ -5,10 +5,11 @@ CCasm has 20 instructions
 |  Instruction | Use  |
 | ------------ | ------------ |
 | set [reg] [val] | Sets the value of a register |
-| mov [reg_a] [reg_b] | Copies the value of reg_a into reg_b |
-| psh [val] | Pushes a value onto the stack |
+| cpy [reg_a] [reg_b] | Copies the value of reg_a into reg_b |
+| mov [reg_a] [reg_b] | Moves the value of reg_a into reg_b and sets reg_a to null |
+| psh [reg:val] | Pushes a value onto the stack, does not set reg to null after pushing |
 | pop | Pops a value off the stack |
-| str [reg] | Stores the value of a register onto the stack |
+| str [reg] | Stores the value of a register onto the stack and sets reg to null |
 | ldr [reg] | Pops the top value off the stack and stores into register |
 | add | Pops the top two values off the stack, adds them and pushes the result onto the stack |
 | sub | Pops the top two values off the stack, subtracts them and pushes the result onto the stack |

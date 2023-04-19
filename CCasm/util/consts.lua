@@ -1,14 +1,11 @@
 --[[
+    TODO:
+        Move this comment to a TODO file
+        Cleanup all error reporting code
+
     New Instructions:
-        imp: Import another file to allow for creation of macro libraries
-            Ex: imp "lib.asm" <-- Would aslo need to add support for strings in lexer
-        dup: Duplicates top value of stack
-        swp: Swaps top two values on stack
 
     Planned Features:
-        Change the str instruction to set a register to 0 after storing value to stack
-        Add support for registers with psh instruction
-            Would not set register to 0 meaning psh a and str a would behave differently
         Add support for macro calls to take arguments
             Ex:
                 %macro add 2 <-- Number of arguments macro takes
@@ -22,11 +19,12 @@
 
 local instructions = {
     ['set'] = 'SET',
+    ['cpy'] = 'COPY',
     ['mov'] = 'MOVE',
     ['psh'] = 'PUSH',
     ['pop'] = 'POP',
-    --['dup'] = 'DUPLICATE',
-    --['swp'] = 'SWAP',
+    ['dup'] = 'DUPLICATE',
+    ['swp'] = 'SWAP',
     ['ldr'] = 'LOAD',
     ['str'] = 'STORE',
     ['add'] = 'ADD',

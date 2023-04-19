@@ -10,125 +10,125 @@ return function(source, error_reporter)
 
     local function at_end()
         return current > #source
-      end
+    end
 
-      local function advance()
+    local function advance()
         current = current + 1
         return source:sub(current - 1, current - 1)
-      end
+    end
 
-      local function add_token(type, literal, text)
+    local function add_token(type, literal, text)
         text = text or source:sub(start, current - 1)
         table.insert(tokens, Token(type, text, literal, line))
-      end
+    end
 
-      local function TokenAdder(type, literal)
+    local function TokenAdder(type, literal)
         return function() add_token(type, literal) end
-      end
+    end
 
-      local function peek()
+    local function peek()
         return source:sub(current, current) or '\0'
-      end
+    end
 
-      local function peek_next()
+    local function peek_next()
         return source:sub(current + 1, current + 1) or '\0'
-      end
+    end
 
-      local function consume_comment()
+    local function consume_comment()
         while peek() ~= '\n' and not at_end() do
             advance()
         end
-      end
+    end
 
-      local function is_digit(c)
+    local function is_digit(c)
         return c:match('%d')
-      end
+    end
 
-      local function add_number()
+    local function add_number()
         while is_digit(peek()) do advance() end
 
         if peek() == '.' and is_digit(peek_next()) then
-          advance()
-          while is_digit(peek()) do advance() end
+            advance()
+            while is_digit(peek()) do advance() end
         end
 
         add_token('NUMBER', tonumber(source:sub(start, current - 1)))
-      end
+    end
 
-      local function add_string()
+    local function add_string()
         start = current
         while peek() ~= '"' and not at_end() do advance() end
         add_token('STRING', source:sub(start, current - 1))
         advance()
-      end
+    end
 
-      local function is_alpha(c)
+    local function is_alpha(c)
         return c:match('[%a_]')
-      end
+    end
 
-      local function is_hex(c)
+    local function is_hex(c)
         return c:match('[%x]')
-      end
+    end
 
-      local function is_alphanumeric(c)
+    local function is_alphanumeric(c)
         return is_digit(c) or is_alpha(c)
-      end
+    end
 
-      local function add_identifier()
+    local function add_identifier()
         while is_alpha(peek()) do advance() end
 
         local text = source:sub(start, current - 1)
         if peek() == ':' then
             add_token('LABEL')
             advance()
+        elseif text == 'null' then
+            add_token('NULL')
         else
             add_token(instructions[text] or 'IDENTIFIER')
         end
-      end
+    end
 
-      local function add_macro()
+    local function add_macro()
         start = current
         while is_alphanumeric(peek()) do advance() end
 
         local text = source:sub(start, current - 1)
         add_token(keywords[text] or 'MACRO')
-      end
+    end
 
-      local function hex_number()
+    local function hex_number()
         start = current
         while is_hex(peek()) do advance() end
 
         add_token('NUMBER', tonumber(source:sub(start, current - 1), 16))
-      end
+    end
 
-      local function scan_token()
+    local function scan_token()
         switch(advance(), {
-          [';'] = consume_comment,
-          ['"'] = add_string,
-          ['%'] = add_macro,
-          ['$'] = hex_number,
-          [' '] = load'',
-          ['\r'] = load'',
-          ['\t'] = load'',
-          ['\n'] = function() line = line + 1 end,
-          [switch.default] = function(c)
-            if is_digit(c) then
-              add_number()
-            elseif is_alpha(c) or c == '_' then
-              add_identifier()
-            else
-              error_reporter(line, 'Unexpected character.')
+            [';'] = consume_comment,
+            ['"'] = add_string,
+            ['%'] = add_macro,
+            ['$'] = hex_number,
+            [' '] = load'',
+            ['\r'] = load'',
+            ['\t'] = load'',
+            ['\n'] = function() line = line + 1 end,
+            [switch.default] = function(c)
+                if is_digit(c) then
+                    add_number()
+                elseif is_alpha(c) or c == '_' then
+                    add_identifier()
+                else
+                    error_reporter(line, 'Unexpected character.')
+                end
             end
-          end
         })
-      end
+    end
 
-      while not at_end() do
+    while not at_end() do
         start = current
         scan_token()
-      end
+    end
 
-      --add_token('EOF', nil, '')
-
-      return tokens
+    return tokens
 end
