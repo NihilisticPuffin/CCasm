@@ -51,6 +51,9 @@ function parse(tokens, error_reporter)
     end
 
     local function jmp_line(line)
+        if line > tokens[#tokens].line then
+            error("Jump out of bounds", 0)
+        end
         for k, v in ipairs(tokens) do
             if v.line == line then
                 register['ip'] = k
