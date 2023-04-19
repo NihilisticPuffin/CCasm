@@ -53,6 +53,15 @@ function parse(tokens, error_reporter)
         end
     end
 
+    function jmp_line(line)
+        for k, v in ipairs(tokens) do
+            if v.line == line then
+                register['ip'] = k
+                break
+            end
+        end
+    end
+
 
     while register['ip'] <= #tokens do
         local i = advance()
@@ -113,36 +122,37 @@ function parse(tokens, error_reporter)
             end
         elseif i.type == instructions['jmp'] then
             local val = advance()
-            if stack[#stack] ~= 0 then
+            if isRegister(val.lexeme) then
+                jmp_line(register[val.lexeme])
+            elseif labels[val.lexeme] then
+                register['ip'] = labels[val.lexeme]
+            elseif val.type == 'NUMBER' then
+                jmp_line(val.literal)
+            else
+                error("[Line: " .. i.line  .. "] Instruction " .. i.type .. " expects type of register, number, or label", 0)
+            end
+        elseif i.type == instructions['jeq'] then
+            local val = advance()
+            if table.remove(stack) ~= 0 then
                 if isRegister(val.lexeme) then
-                    register['ip'] = register[val.lexeme]
+                    jmp_line(register[val.lexeme])
                 elseif labels[val.lexeme] then
                     register['ip'] = labels[val.lexeme]
                 elseif val.type == 'NUMBER' then
-                    for k, v in ipairs(tokens) do
-                        if v.line == val.literal then
-                            register['ip'] = k
-                            break
-                        end
-                    end
+                    jmp_line(val.literal)
                 else
                     error("[Line: " .. i.line  .. "] Instruction " .. i.type .. " expects type of register, number, or label", 0)
                 end
             end
         elseif i.type == instructions['jne'] then
             local val = advance()
-            if stack[#stack] == 0 then
+            if table.remove(stack) == 0 then
                 if isRegister(val.lexeme) then
-                    register['ip'] = register[val.lexeme]
+                    jmp_line(register[val.lexeme])
                 elseif labels[val.lexeme] then
                     register['ip'] = labels[val.lexeme] + 1
                 elseif val.type == 'NUMBER' then
-                    for k, v in ipairs(tokens) do
-                        if v.line == val.literal then
-                            register['ip'] = k
-                            break
-                        end
-                    end
+                    jmp_line(val.literal)
                 else
                     error("[Line: " .. i.line  .. "] Instruction " .. i.type .. " expects type of register, number, or label", 0)
                 end
