@@ -24,6 +24,7 @@ CCasm has 20 instructions
 | dmp | Dumps stack to console for debugging |
 | chr [reg:val] | Outputs the value or register as  |
 | out [reg:val] | Outputs the value or register |
+| imp [string] | Loads file and runs it |
 | hlt | Halts the program |
 
 ## Labels
