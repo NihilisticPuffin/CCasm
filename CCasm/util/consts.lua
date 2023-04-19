@@ -6,15 +6,6 @@
     New Instructions:
 
     Planned Features:
-        Add support for macro calls to take arguments
-            Ex:
-                %macro add 2 <-- Number of arguments macro takes
-                    psh %1
-                    psh %2
-                    add
-                %end
-
-                %add 5 4
 ]]--
 
 local instructions = {
