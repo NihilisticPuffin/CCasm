@@ -79,41 +79,41 @@ set a 1
 set c 17
 
 loop:
-    mov a b
+    cpy a b
     str b
     psh 15
     mod
     ldr b
     cmp b 0
-    jmp fizz_buzz
+    jeq fizz_buzz
 
-    mov a b
+    cpy a b
     str b
     psh 3
     mod
     ldr b
     cmp b 0
-    jmp fizz
+    jeq fizz
 
-    mov a b
+    cpy a b
     str b
     psh 5
     mod
     ldr b
     cmp b 0
-    jmp buzz
+    jeq buzz
 
     out a
     chr 10
 
 step:
     cmp a c
-    jmp exit
+    jeq exit
     str a
     psh 1
     add
     ldr a
-    jne loop
+    jmp loop
 
 fizz:
     chr 70
@@ -165,30 +165,30 @@ set c 1 ; Current Number
 
 
 fib:
-cmp a 1
-jmp _exit
-str a
-psh 1
-sub
-ldr a
-str b
-str c
-add
-mov c b
-ldr c
-jne fib
+    cmp a 1
+    jeq _exit
+    str a
+    psh 1
+    sub
+    ldr a
+    psh b
+    psh c
+    add
+    mov c b
+    ldr c
+    jmp fib
 
 _exit:
-out c ; Print output of Fibonacci
-chr 10 ; \n
-; Calculate time in milliseconds to finish
-utc e
-str e
-str d
-sub
-ldr e
-out e
-chr 109 ;m
-chr 115 ;s
-chr 10 ;\n
+    out c ; Print output of Fibonacci
+    chr 10 ; \n
+    ; Calculate time in milliseconds to finish
+    utc e
+    str e
+    str d
+    sub
+    ldr e
+    out e
+    chr 109 ;m
+    chr 115 ;s
+    chr 10 ;\n
 ```
