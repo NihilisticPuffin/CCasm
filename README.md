@@ -1,5 +1,5 @@
 # CCasm
-An assembly language for computercraft
+An interpreted assembly-like language for computercraft
 
 ## Instruction Set
 |  Instruction | Use  |
@@ -28,13 +28,16 @@ An assembly language for computercraft
 | imp [string] | Loads file and runs it |
 | hlt | Halts the program |
 
+## Comments
+Comments in CCasm can be started with a semicolon (;) and continue until the end of the line
+
 ## Labels
 Labels are defined by any alphabetic character and underscores [a-zA-Z_] followed by a colon (:)
 Labels can be jumped to using jump instructions
 ```
 set a 1
 cmp a 1
-jmp skip
+jeq skip
 out a
 skip:
 ```
@@ -63,9 +66,6 @@ Macros are called with a % followed by the identifier
 
 %hello ; Prints 'Hello, World!' followed by a newline
 ```
-
-## Comments
-Comments in CCasm can be started with a semicolon (;) and continue until the end of the line
 
 # Examples
 
