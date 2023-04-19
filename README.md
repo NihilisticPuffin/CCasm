@@ -9,6 +9,8 @@ An interpreted assembly-like language for computercraft
 | mov [reg_a] [reg_b] | Move | Moves the value of reg_a into reg_b and sets reg_a to null |
 | psh [reg:val] | Push | Pushes a value onto the stack, does not set register to null after pushing |
 | pop | Pop | Pops a value off the stack |
+| dup | Duplicate | Duplicates the top value on the stack |
+| swp | Swap | Swaps the top two values on the stack |
 | str [reg] | Store | Stores the value of a register onto the stack and sets register to null |
 | ldr [reg] | Load | Pops the top value off the stack and stores into register |
 | add | Add | Pops the top two values off the stack, adds them and pushes the result onto the stack |

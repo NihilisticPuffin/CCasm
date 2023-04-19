@@ -1,13 +1,3 @@
---[[
-    TODO:
-        Move this comment to a TODO file
-        Cleanup all error reporting code
-
-    New Instructions:
-
-    Planned Features:
-]]--
-
 local instructions = {
     ['set'] = 'SET',
     ['cpy'] = 'COPY',
