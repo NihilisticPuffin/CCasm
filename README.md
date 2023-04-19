@@ -69,7 +69,7 @@ Comments in CCasm can be started with a semicolon (;) and continue until the end
 
 # Examples
 
-WARNING: CCasm is currently underdevelopment and going thru changed, examples may be broken by updates
+WARNING: CCasm is currently under-development, examples may be broken by future updates
 
 Timer.asm
 ```
