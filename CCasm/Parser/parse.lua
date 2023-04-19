@@ -102,11 +102,12 @@ function parse(tokens, error_reporter)
             register[reg_a.lexeme] = Token('NULL')
         elseif i.type == instructions['psh'] then
             local val = advance()
-            if val.type ~= 'NUMBER' or not isRegister(val.lexeme) then error("[Line: " .. i.line  .. "] Instruction " .. i.type .. " expects type of register or number", 0) end
             if isRegister(val.lexeme) then
-                table.insert(stack, register[reg.lexeme])
-            else
+                table.insert(stack, register[val.lexeme])
+            elseif val.type == 'NUMBER' then
                 table.insert(stack, val.literal)
+            else
+                error("[Line: " .. i.line  .. "] Instruction " .. i.type .. " expects type of register or number", 0)
             end
         elseif i.type == instructions['pop'] then
             table.remove(stack)
