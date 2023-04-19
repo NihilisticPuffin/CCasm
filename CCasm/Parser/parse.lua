@@ -3,13 +3,14 @@ local lex = require "CCasm.Lexer.lex"
 local Token = require "CCasm.Lexer.Token"
 local instructions, keywords = require "CCasm.util.consts" ()
 
+local nest = {}
 
 function parse(tokens, error_reporter)
     local function sub_parse(tokens)
-        local tmp = register['ip']
+        nest:insert(register['ip'])
         register['ip'] = 1
         parse( tokens )
-        register['ip'] = tmp
+        register['ip'] = nest:remove()
     end
 
     local function rev(t)
@@ -37,6 +38,10 @@ function parse(tokens, error_reporter)
             if index == 'n' then return end
             assert(isRegister(value) == true, value .. " is not a register")
         end
+    end
+
+    local function peek()
+        return tokens[register['ip']]
     end
 
     local function advance()
@@ -219,17 +224,42 @@ function parse(tokens, error_reporter)
         elseif i.type == 'LABEL' then
         elseif i.type == 'START' then
             local name = advance()
+            local argc = nil
+            if peek().type == 'NUMBER' then
+                argc = advance().literal
+            else
+                argc = 0
+            end
 
-            local body = {}
+            local m = {}
+            m.body = {}
+            m.count = argc
             local t = advance()
             while t.type ~= 'END' do
-                table.insert(body, t)
+                table.insert(m.body, t)
                 t = advance()
             end
-            macros[name.lexeme] = body
+            macros[name.lexeme] = m
         elseif i.type == 'MACRO' then
             if not macros[i.lexeme] then error("[Line: " .. i.line  .. "] Undefined macro " .. i.lexeme, 0) end
-            sub_parse( macros[i.lexeme] )
+            if macros[i.lexeme].count > 0 then
+                local args = {}
+                for _ = 1, macros[i.lexeme].count do
+                    table.insert(args, advance())
+                end
+
+                for k = 1, macros[i.lexeme].count do
+                    for j = 1, #macros[i.lexeme].body do
+                        if macros[i.lexeme].body[j].lexeme == tostring(k) and macros[i.lexeme].body[j].type == 'MACRO' then
+                            macros[i.lexeme].body[j].type = args[k].type
+                            macros[i.lexeme].body[j].lexeme = args[k].lexeme
+                            macros[i.lexeme].body[j].literal = args[k].literal
+                        end
+                    end
+                end
+            end
+            
+            sub_parse( macros[i.lexeme].body )
         else
             error("[Line: " .. i.line  .. "] Unexpected " .. i.type .. " " .. i.lexeme, 0)
         end

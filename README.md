@@ -67,6 +67,31 @@ Macros are called with a % followed by the identifier
 %hello ; Prints 'Hello, World!' followed by a newline
 ```
 
+Macros also support arguments by following the macro identifier with the number of arguments the macro takes
+Macro arguments can be accessed within a macro using a % followed by the argument number
+```
+%macro say
+    out a
+    chr 10
+%end
+
+%macro for 3
+    for_loop:
+        %3 ; %3 gets replaced with %say
+
+        cmp %1 %2 ; %1 and %2 get replaced with a and 5 respectively
+        jeq exit
+        str %1
+        psh 1
+        add
+        ldr %1
+        jmp for_loop
+%end
+
+set a 1
+%for a 5 %say ; Loops from value of a to 5 and outputs a
+```
+
 # Examples
 
 WARNING: CCasm is currently under-development, examples may be broken by future updates
