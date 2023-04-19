@@ -41,10 +41,10 @@ jeq skip
 out a
 skip:
 ```
-The `out a` instruction will be skipped by the `jmp skip`
+The `out a` instruction will be skipped by the `jeq skip`
 
 ## Macros
-Macros are defined using the `%macro` keyword followed by and identifier and closed with the `%end` keyword
+Macros are defined using the `%macro` keyword followed by an identifier and closed with the `%end` keyword
 Macros are called with a % followed by the identifier
 ```
 %macro hello
