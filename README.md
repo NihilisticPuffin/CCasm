@@ -16,9 +16,9 @@ CCasm has 20 instructions
 | div | Pops the top two values off the stack, divides them and pushes the result onto the stack |
 | mod | Pops the top two values off the stack, preforms a modulo operation and pushes the result onto the stack |
 | cmp [reg] [reg:val] | Compares the value of a register with another register or value |
-| jmp [reg:val:label] | Jumps to the line number of register or value or to a lable |
-| jeq [reg:val:label] | Jumps to the line number of register or value or to a lable if top value of stack is not zero |
-| jne [reg:val:label] | Jumps to the line number of register or value or to a lable if top value of stack is zero |
+| jmp [reg:val:label] | Jumps to the line number of register or value or to a label |
+| jeq [reg:val:label] | Jumps to the line number of register or value or to a label if top value of stack is not zero |
+| jne [reg:val:label] | Jumps to the line number of register or value or to a label if top value of stack is zero |
 | utc [reg] | Sets value of register to number of milliseconds since UNIX Epoch |
 | slp [val] | Sleeps for given number of seconds |
 | dmp | Dumps stack to console for debugging |
