@@ -1,7 +1,7 @@
 # CCasm
 An assembly language for computercraft
 
-CCasm has 20 instructions
+## Instruction Set
 |  Instruction | Use  |
 | ------------ | ------------ |
 | set [reg] [val] | Sets the value of a register |
