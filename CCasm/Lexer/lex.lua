@@ -59,6 +59,10 @@ return function(source, error_reporter)
         return c:match('[%a_]')
       end
 
+      local function is_hex(c)
+        return c:match('[%x]')
+      end
+
       local function is_alphanumeric(c)
         return is_digit(c) or is_alpha(c)
       end
@@ -83,10 +87,18 @@ return function(source, error_reporter)
         add_token(keywords[text] or 'MACRO')
       end
 
+      local function hex_number()
+        start = current
+        while is_hex(peek()) do advance() end
+
+        add_token('NUMBER', tonumber(source:sub(start, current - 1)))
+      end
+
       local function scan_token()
         switch(advance(), {
           [';'] = consume_comment,
           ['%'] = add_macro,
+          ['$'] = hex_number,
           [' '] = load'',
           ['\r'] = load'',
           ['\t'] = load'',
