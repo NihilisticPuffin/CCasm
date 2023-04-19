@@ -91,7 +91,7 @@ return function(source, error_reporter)
         start = current
         while is_hex(peek()) do advance() end
 
-        add_token('NUMBER', tonumber(source:sub(start, current - 1)))
+        add_token('NUMBER', tonumber(source:sub(start, current - 1), 16))
       end
 
       local function scan_token()
