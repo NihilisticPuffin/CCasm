@@ -18,4 +18,16 @@ local asm = fs.open(args[1], 'r')
 local code = asm.readAll()
 asm.close()
 
+register = {
+    ['a'] = 0,
+    ['b'] = 0,
+    ['c'] = 0,
+    ['d'] = 0,
+    ['e'] = 0,
+    ['ip'] = 1,
+}
+stack = {}
+labels = {}
+macros = {}
+
 parse( lex(code, general_error) )

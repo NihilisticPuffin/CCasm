@@ -55,6 +55,13 @@ return function(source, error_reporter)
         add_token('NUMBER', tonumber(source:sub(start, current - 1)))
       end
 
+      local function add_string()
+        start = current
+        while peek() ~= '"' and not at_end() do advance() end
+        add_token('STRING', source:sub(start, current - 1))
+        advance()
+      end
+
       local function is_alpha(c)
         return c:match('[%a_]')
       end
@@ -97,6 +104,7 @@ return function(source, error_reporter)
       local function scan_token()
         switch(advance(), {
           [';'] = consume_comment,
+          ['"'] = add_string,
           ['%'] = add_macro,
           ['$'] = hex_number,
           [' '] = load'',

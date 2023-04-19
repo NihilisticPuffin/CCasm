@@ -1,19 +1,15 @@
 local switch = require "CCasm.util.switch"
+local lex = require "CCasm.Lexer.lex"
 local instructions, keywords = require "CCasm.util.consts" ()
 
 
 function parse(tokens, error_reporter)
-    local register = {
-        ['a'] = 0,
-        ['b'] = 0,
-        ['c'] = 0,
-        ['d'] = 0,
-        ['e'] = 0,
-        ['ip'] = 1,
-    }
-    local stack = {}
-    local labels = {}
-    local macros = {}
+    function sub_parse(tokens)
+        local tmp = register['ip']
+        register['ip'] = 1
+        parse( tokens )
+        register['ip'] = tmp
+    end
 
     local function rev(t)
         local r = {}
@@ -190,6 +186,14 @@ function parse(tokens, error_reporter)
             end
         elseif i.type == instructions['dmp'] then
             printt( rev(stack) )
+        elseif i.type == instructions['imp'] then
+            local file = advance()
+            if file.type ~= 'STRING' then error("[Line: " .. i.line  .. "] Instruction " .. i.type .. " expects type of string", 0) end
+            if fs.isDir(file.literal) or not fs.exists(file.literal) then error("[Line: " .. i.line  .. "] Could not import file " .. file.literal) end
+            local h = fs.open(file.literal, 'r')
+            local code = h.readAll()
+            h.close()
+            sub_parse(lex(code, error_reporter))
         elseif i.type == instructions['hlt'] then
             break
         elseif i.type == 'LABEL' then
@@ -205,7 +209,7 @@ function parse(tokens, error_reporter)
             macros[name.lexeme] = body
         elseif i.type == 'MACRO' then
             if not macros[i.lexeme] then error("[Line: " .. i.line  .. "] Undefined macro " .. i.lexeme, 0) end
-            parse( macros[i.lexeme] )
+            sub_parse( macros[i.lexeme] )
         else
             error("[Line: " .. i.line  .. "] Unexpected " .. i.type .. " " .. i.lexeme, 0)
         end
