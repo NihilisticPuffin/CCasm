@@ -71,32 +71,63 @@ Comments in CCasm can be started with a semicolon (;) and continue until the end
 
 WARNING: CCasm is currently underdevelopment and going thru changed, examples may be broken by updates
 
-FizzBuzz
+Timer.asm
 ```
 utc d
+
+%macro elapsed
+    ; Calculate time elapsed in milliseconds
+    utc e
+    str e
+    str d
+    sub
+    ldr e
+    out e
+    chr 109 ;m
+    chr 115 ;s
+    chr 10 ;\n
+%end
+```
+
+FizzBuzz
+```
+imp "Timer.asm"
 
 set a 1
 set c 17
 
+%macro fizz
+    chr 70
+    chr 105
+    chr 122
+    chr 122
+%end
+
+%macro buzz
+    chr 66
+    chr 117
+    chr 122
+    chr 122
+%end
+
 loop:
     cpy a b
     str b
+    dup
+    dup
+
     psh 15
     mod
     ldr b
     cmp b 0
     jeq fizz_buzz
 
-    cpy a b
-    str b
     psh 3
     mod
     ldr b
     cmp b 0
     jeq fizz
 
-    cpy a b
-    str b
     psh 5
     mod
     ldr b
@@ -116,53 +147,31 @@ step:
     jmp loop
 
 fizz:
-    chr 70
-    chr 105
-    chr 122
-    chr 122
+    %fizz
     chr 10
     jmp step
 
 buzz:
-    chr 66
-    chr 117
-    chr 122
-    chr 122
+    %buzz
     chr 10
     jmp step
 
 fizz_buzz:
-    chr 70
-    chr 105
-    chr 122
-    chr 122
-    chr 66
-    chr 117
-    chr 122
-    chr 122
+    %fizz
+    %buzz
     chr 10
     jmp step
 
 exit:
-; Calculate time in milliseconds to finish
-    utc e
-    str e
-    str d
-    sub
-    ldr e
-    out e
-    chr 109 ;m
-    chr 115 ;s
-    chr 10 ;\n
+    %elapsed
 ```
 
 Fibonacci
 ```
-utc d
+imp "Timer.asm"
 set a 90 ; Iterations
 set b 0 ; Previous Number
 set c 1 ; Current Number
-
 
 fib:
     cmp a 1
@@ -181,14 +190,5 @@ fib:
 _exit:
     out c ; Print output of Fibonacci
     chr 10 ; \n
-    ; Calculate time in milliseconds to finish
-    utc e
-    str e
-    str d
-    sub
-    ldr e
-    out e
-    chr 109 ;m
-    chr 115 ;s
-    chr 10 ;\n
+    %elapsed
 ```
