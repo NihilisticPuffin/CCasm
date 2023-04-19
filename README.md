@@ -23,7 +23,7 @@ An interpreted assembly-like language for computercraft
 | utc [reg] | Sets value of register to number of milliseconds since UNIX Epoch |
 | slp [val] | Sleeps for given number of seconds |
 | dmp | Dumps stack to console for debugging |
-| chr [reg:val] | Outputs the value or register as  |
+| chr [reg:val] | Outputs the value or register as ASCII character |
 | out [reg:val] | Outputs the value or register |
 | imp [string] | Loads file and runs it |
 | hlt | Halts the program |
@@ -87,6 +87,33 @@ utc d
     chr 115 ;s
     chr 10 ;\n
 %end
+```
+
+Fibonacci
+```
+imp "Timer.asm"
+set a 90 ; Iterations
+set b 0 ; Previous Number
+set c 1 ; Current Number
+
+fib:
+    cmp a 1
+    jeq _exit
+    str a
+    psh 1
+    sub
+    ldr a
+    psh b
+    psh c
+    add
+    mov c b
+    ldr c
+    jmp fib
+
+_exit:
+    out c ; Print output of Fibonacci
+    chr 10 ; \n
+    %elapsed
 ```
 
 FizzBuzz
@@ -163,32 +190,5 @@ fizz_buzz:
     jmp step
 
 exit:
-    %elapsed
-```
-
-Fibonacci
-```
-imp "Timer.asm"
-set a 90 ; Iterations
-set b 0 ; Previous Number
-set c 1 ; Current Number
-
-fib:
-    cmp a 1
-    jeq _exit
-    str a
-    psh 1
-    sub
-    ldr a
-    psh b
-    psh c
-    add
-    mov c b
-    ldr c
-    jmp fib
-
-_exit:
-    out c ; Print output of Fibonacci
-    chr 10 ; \n
     %elapsed
 ```
