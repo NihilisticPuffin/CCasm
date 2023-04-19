@@ -80,12 +80,13 @@ Macro arguments can be accessed within a macro using a % followed by the argumen
         %3 ; %3 gets replaced with %say
 
         cmp %1 %2 ; %1 and %2 get replaced with a and 5 respectively
-        jeq exit
+        jeq for_exit
         str %1
         psh 1
         add
         ldr %1
         jmp for_loop
+        for_exit:
 %end
 
 set a 1
