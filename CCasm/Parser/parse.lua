@@ -215,7 +215,7 @@ function parse(tokens, error_reporter)
         elseif i.type == instructions['imp'] then
             local file = advance()
             if file.type ~= 'STRING' then error("[Line: " .. i.line  .. "] Instruction " .. i.type .. " expects type of string", 0) end
-            if fs.isDir(file.literal) or not fs.exists(file.literal) then error("[Line: " .. i.line  .. "] Could not import file " .. file.literal) end
+            if fs.isDir(file.literal) or not fs.exists(file.literal) then error("[Line: " .. i.line  .. "] Could not import file " .. file.literal, 0) end
             local h = fs.open(file.literal, 'r')
             local code = h.readAll()
             h.close()
