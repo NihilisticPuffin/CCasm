@@ -147,7 +147,7 @@ _exit:
 ```
 imp "Timer.asm"
 set a 1
-set b 300
+set b 5
 set c 1
 
 fac:
