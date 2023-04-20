@@ -45,6 +45,9 @@ skip:
 ```
 The `out a` instruction will be skipped by the `jeq skip`
 
+## Numbers
+Numbers in CCasm can be represented as any real number (Ex: 5, 3.14, -15) or as a hexideciaml number using a dollar sign (Ex: $FA, $B08A)
+
 ## Macros
 Macros are defined using the `%macro` keyword followed by an identifier and closed with the `%end` keyword
 Macros are called with a % followed by the identifier
