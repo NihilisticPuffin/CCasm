@@ -67,7 +67,7 @@ function parse(tokens, error_reporter)
         end
     end
 
-    local function handle_jump(val)
+    local function handle_jump(i, val)
         if isRegister(val.lexeme) then
             if type(register[val.lexeme]) == 'table' then
                 if register[val.lexeme].type == 'NULL' then error("[Line: " .. i.line  .. "] Cannont jump to NULL", 0) end
@@ -167,16 +167,17 @@ function parse(tokens, error_reporter)
             end
         elseif i.type == instructions['jmp'] then
             local val = advance()
-            handle_jump(val)
+            handle_jump(i, val)
         elseif i.type == instructions['jeq'] then
             local val = advance()
-            if table.remove(stack) ~= 0 then
-                handle_jump(val)
+            local cond table.remove(stack)
+            if cond ~= 0 and cond ~= nil then
+                handle_jump(i, val)
             end
         elseif i.type == instructions['jne'] then
             local val = advance()
             if table.remove(stack) == 0 then
-                handle_jump(val)
+                handle_jump(i, val)
             end
         elseif i.type == instructions['slp'] then
             local val = advance()
@@ -258,7 +259,7 @@ function parse(tokens, error_reporter)
                     end
                 end
             end
-            
+
             sub_parse( macros[i.lexeme].body )
         else
             error("[Line: " .. i.line  .. "] Unexpected " .. i.type .. " " .. i.lexeme, 0)
