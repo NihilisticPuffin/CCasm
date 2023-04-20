@@ -35,6 +35,7 @@ Comments in CCasm can be started with a semicolon (;) and continue until the end
 
 ## Labels
 Labels are defined by any alphabetic character and underscores [a-zA-Z_] followed by a colon (:)
+
 Labels can be jumped to using jump instructions
 ```
 set a 1
@@ -49,7 +50,10 @@ The `out a` instruction will be skipped by the `jeq skip`
 Numbers in CCasm can be represented as any real number (Ex: 5, 3.14, -15) or as a hexideciaml number using a dollar sign (Ex: $FA, $B08A)
 
 ## Macros
+Macros can be used as simple function calls or to create things such as for and while loops (See: [libs/loops.asm](https://github.com/NihilisticPuffin/CCasm/blob/main/libs/loops.asm))
+
 Macros are defined using the `%macro` keyword followed by an identifier and closed with the `%end` keyword
+
 Macros are called with a % followed by the identifier
 ```
 %macro hello
@@ -73,6 +77,7 @@ Macros are called with a % followed by the identifier
 ```
 
 Macros also support arguments by following the macro identifier with the number of arguments the macro takes
+
 Macro arguments can be accessed within a macro using a % followed by the argument number
 ```
 %macro say
