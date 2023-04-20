@@ -109,6 +109,7 @@ return function(source, error_reporter)
             ['"'] = add_string,
             ['%'] = add_macro,
             ['$'] = hex_number,
+            ['-'] = add_number,
             [' '] = load'',
             ['\r'] = load'',
             ['\t'] = load'',
