@@ -99,7 +99,7 @@ set a 1
 
 WARNING: CCasm is currently under-development, examples may be broken by future updates
 
-Timer.asm
+## Timer.asm
 ```
 utc d
 
@@ -117,7 +117,7 @@ utc d
 %end
 ```
 
-Fibonacci
+## Fibonacci
 ```
 imp "Timer.asm"
 set a 90 ; Iterations
@@ -143,8 +143,35 @@ _exit:
     chr 10 ; \n
     %elapsed
 ```
+## Factorial
+```
+imp "Timer.asm"
+set a 1
+set b 300
+set c 1
 
-FizzBuzz
+fac:
+    psh a
+    dup
+    psh c
+    mul
+    ldr c
+    cmp a b
+    jeq _exit
+    psh 1
+    add
+    ldr a
+    jmp fac
+
+
+_exit:
+    out c
+    chr 10
+    %elapsed
+```
+
+
+## FizzBuzz
 ```
 imp "Timer.asm"
 
