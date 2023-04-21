@@ -1,6 +1,5 @@
-%macro PI
-    psh 3.14159265358979323846
-%end
+#register PI
+set PI 3.14159265358979323846
 
 %macro add 2 ; %1 + %2
     psh %1
