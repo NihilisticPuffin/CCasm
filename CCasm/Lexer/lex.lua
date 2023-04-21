@@ -2,11 +2,22 @@ local Token = require "CCasm.Lexer.Token"
 local switch = require "CCasm.util.switch"
 local instructions, keywords = require "CCasm.util.consts" ()
 
-return function(source)
-    local start = 1
-    local current = 1
-    local line = 1
-    local tokens = {}
+local start = 1
+local current = 1
+local line = 1
+local tokens = {}
+
+local nest = {}
+
+local function lex(source)
+    local function sub_lex(source)
+        local tmp = {start = start, current = current, line = line}
+        table.insert(nest, tmp)
+        start, current, line = 1, 1, 1
+        lex(source)
+        tmp = table.remove(nest)
+        start, current, line = tmp.start, tmp.current, tmp.line
+    end
 
     local function at_end()
         return current > #source
@@ -105,11 +116,26 @@ return function(source)
         while peek() ~= '\n' and not at_end() do
             advance() --Consume Space
             start = current
-            while is_alphanumeric(peek()) do advance() end
-            table.insert(args, source:sub(start, current - 1))
+            if peek() == '\"' then
+                advance()
+                start = current
+                while peek() ~= '\"' do if peek() == '\n' or at_end() then report(line, "Unterminated string") end advance() end
+                table.insert(args, source:sub(start, current - 1))
+                advance()
+            else
+                while is_alphanumeric(peek()) do advance() end
+                table.insert(args, source:sub(start, current - 1))
+            end
         end
         if keyword == 'register' then
             register[args[1]] = Token('NULL')
+        elseif keyword == 'import' then
+            if not fs.exists(args[1]) then report(line, "Could not include " .. args[1]) end
+            local h = fs.open(args[1], 'r')
+            local code = h.readAll()
+            h.close()
+
+            sub_lex(code)
         end
     end
 
@@ -151,3 +177,5 @@ return function(source)
 
     return tokens
 end
+
+return lex

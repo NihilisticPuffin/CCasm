@@ -83,7 +83,7 @@ function parse(tokens)
     end
 
 
-    while register['ip'] <= #tokens and not had_error do
+    while register['ip'] <= #tokens do
         local i = advance()
         if i.type == instructions['set'] then
             local reg = advance()
@@ -218,14 +218,6 @@ function parse(tokens)
             end
         elseif i.type == instructions['dmp'] then
             printt( rev(stack) )
-        elseif i.type == instructions['imp'] then
-            local file = advance()
-            if file.type ~= 'STRING' then report(i.line, "Instruction " .. i.type .. " expects type of string") end
-            if fs.isDir(file.literal) or not fs.exists(file.literal) then report(i.line, "Could not import file " .. file.literal) end
-            local h = fs.open(file.literal, 'r')
-            local code = h.readAll()
-            h.close()
-            sub_parse(lex(code))
         elseif i.type == instructions['hlt'] then
             break
         elseif i.type == 'LABEL' then

@@ -20,12 +20,11 @@ if #args > 1 then
     error("Usage: CCasm [path]", 0)
 end
 _G.report = function(line, message)
-    io.stderr:write('[Line: ' .. line .. '] Error: ' .. message .. '\n')
-    had_error = true
+    error('[Line: ' .. line .. '] Error: ' .. message .. '\n', 0)
 end
 
 local function repl()
-    while not had_error do
+    while true do
         write(">: ")
         local input = read()
         register['ip'] = 1

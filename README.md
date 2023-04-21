@@ -28,7 +28,6 @@ An interpreted assembly-like language for computercraft
 | dmp | Dump | Dumps stack to console for debugging |
 | chr [reg:val] | Character | Outputs the value or register as ASCII character |
 | out [reg:val] | Output | Outputs the value or register |
-| imp [string] | Import | Loads file and runs it |
 | hlt | Halt | Halts the program |
 
 ## Registers
@@ -45,7 +44,6 @@ set ip 4 ; Note: The value 4 is used here because the out instuction is the 4th 
 ## Preprocessor
 Preprocessor commands begin with the hash symbol (#)
 
-There is currently only one preprocessor command
 
 New registers can be dynamicaly created by programs using the `#register` preprocessor command followed by the register name
 ```
@@ -58,6 +56,9 @@ out new_register
 set new_register 5
 out new_register ; Outputs 5
 ```
+
+You can import files with the `#import` preprocessor command (See: [Examples](https://github.com/NihilisticPuffin/CCasm/tree/main#examples))
+
 
 ## Comments
 Comments in CCasm can be started with a semicolon (;) and continue until the end of the line
@@ -79,7 +80,7 @@ The `out a` instruction will be skipped by the `jeq skip`
 Numbers in CCasm can be represented as any real number (Ex: 5, 3.14, -15) or as a hexideciaml number using a dollar sign (Ex: $FA, $B08A)
 
 ## Strings
-CCasm currently has partial support for strings using double quotes ("), however strings may not behave properly in certain situations as they are currently only intended to work with the import instruction
+CCasm currently has partial support for strings using double quotes ("), however strings may not behave properly in certain situations
 
 ## Macros
 Macros can be used as simple function calls or to create things such as for and while loops (See: [libs/loops.asm](https://github.com/NihilisticPuffin/CCasm/blob/main/libs/loops.asm))
@@ -141,25 +142,31 @@ WARNING: CCasm is currently under-development, examples may be broken by future 
 
 ## Timer.asm
 ```
-utc d
+#register timer_start
+#register timer_end
 
-%macro elapsed
+%macro timer_init
+    utc timer_start
+%end
+
+%macro timer_elapsed
     ; Calculate time elapsed in milliseconds
-    utc e
-    str e
-    str d
+    utc timer_end
+    str timer_end
+    str timer_start
     sub
-    ldr e
-    out e
+    ldr timer_end
+    out timer_end
     chr 109 ;m
     chr 115 ;s
-    chr 10 ;\n
+    chr 10  ;\n
 %end
 ```
 
 ## Fibonacci
 ```
-imp "Timer.asm"
+#import "Timer.asm"
+%timer_init
 set a 90 ; Iterations
 set b 0 ; Previous Number
 set c 1 ; Current Number
@@ -181,11 +188,12 @@ fib:
 _exit:
     out c ; Print output of Fibonacci
     chr 10 ; \n
-    %elapsed
+    %timer_elapsed
 ```
 ## Factorial
 ```
-imp "Timer.asm"
+#import "Timer.asm"
+%timer_init
 set a 1
 set b 5
 set c 1
@@ -207,14 +215,14 @@ fac:
 _exit:
     out c
     chr 10
-    %elapsed
+    %timer_elapsed
 ```
 
 
 ## FizzBuzz
 ```
-imp "Timer.asm"
-
+#import "Timer.asm"
+%timer_init
 set a 1
 set c 17
 
@@ -285,10 +293,10 @@ fizz_buzz:
     jmp step
 
 exit:
-    %elapsed
+    %timer_elapsed
 ```
 
 # TODO
-- [ ] Replace `imp` instruction with `#import` preprocessor command
+- [x] Replace `imp` instruction with `#import` preprocessor command
 - [ ] Add bit shift instructions (`shl` and `shr`)
 - [ ] Add bitwise instructions (`bor`, `xor`, `and`, `not`)

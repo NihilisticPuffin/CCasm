@@ -23,7 +23,6 @@ local instructions = {
     ['dmp'] = 'DUMP',
     ['chr'] = 'CHARACTER',
     ['out'] = 'OUTPUT',
-    ['imp'] = 'IMPORT',
     ['hlt'] = 'HALT',
 }
 
