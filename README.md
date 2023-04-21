@@ -144,8 +144,7 @@ WARNING: CCasm is currently under-development, examples may be broken by future 
 
 ## Timer.asm
 ```
-#register timer_start
-#register timer_end
+#register timer_start timer_end
 
 %macro timer_init
     utc timer_start
