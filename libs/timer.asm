@@ -10,7 +10,6 @@
 %end
 
 %macro timer_end
-    ; Calculate time elapsed in milliseconds
     utc timer_end
     str timer_end
     str timer_start
