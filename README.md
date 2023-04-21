@@ -27,6 +27,7 @@ An interpreted assembly-like language for computercraft
 | slp [val] | Sleep | Sleeps for given number of seconds |
 | dmp | Dump | Dumps stack to console for debugging |
 | key | Key | Pauses execution until user presses a key then pushes key code onto stack |
+| pos [reg:val] [reg:val] | Position | Sets the Cursor Position |
 | chr [reg:val] | Character | Outputs the value or register as ASCII character |
 | out [reg:val] | Output | Outputs the value or register |
 | hlt | Halt | Halts the program |

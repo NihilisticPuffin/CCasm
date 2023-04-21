@@ -22,6 +22,7 @@ local instructions = {
     ['utc'] = 'UTC',
     ['dmp'] = 'DUMP',
     ['key'] = 'KEY',
+    ['pos'] = 'POS',
     ['chr'] = 'CHARACTER',
     ['out'] = 'OUTPUT',
     ['hlt'] = 'HALT',

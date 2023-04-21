@@ -199,8 +199,31 @@ function parse(tokens)
             assertRegister(reg.lexeme)
             register[reg.lexeme] = os.epoch('utc')
         elseif i.type == instructions['key'] then
-            local event, key = os.pullEvent("key")
+            local _, key = os.pullEvent("key")
+            sleep(0.05)
             table.insert(stack, key)
+        elseif i.type == instructions['pos'] then
+            local xTok = advance()
+            local yTok = advance()
+            local xPos, yPos;
+
+            if isRegister(xTok.lexeme) then
+                xPos = register[xTok.lexeme]
+            elseif xTok.type == 'NUMBER' then
+                xPos = xTok.literal
+            else
+                report(i.line, "Instruction " .. i.type .. " expects type of register or number")
+            end
+
+            if isRegister(yTok.lexeme) then
+                yPos = register[yTok.lexeme]
+            elseif xTok.type == 'NUMBER' then
+                yPos = yTok.literal
+            else
+                report(i.line, "Instruction " .. i.type .. " expects type of register or number")
+            end
+
+            term.setCursorPos(xPos, yPos)
         elseif i.type == instructions['chr'] then
             local val = advance()
             if isRegister(val.lexeme) then
