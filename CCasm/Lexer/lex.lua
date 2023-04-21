@@ -108,7 +108,7 @@ return function(source)
             while is_alphanumeric(peek()) do advance() end
             table.insert(args, source:sub(start, current - 1))
         end
-        if keyword == 'reg' then
+        if keyword == 'register' then
             register[args[1]] = Token('NULL')
         end
     end

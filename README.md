@@ -47,14 +47,14 @@ Preprocessor commands begin with the hash symbol (#)
 
 There is currently only one preprocessor command
 
-New registers can be dynamicaly created by programs using the `#reg` preprocessor command followed by the register name
+New registers can be dynamicaly created by programs using the `#register` preprocessor command followed by the register name
 ```
 set new_register 5 ; Errors because new_register is not a register
 out new_register
 ```
 
 ```
-#reg new_register
+#register new_register
 set new_register 5
 out new_register ; Outputs 5
 ```
