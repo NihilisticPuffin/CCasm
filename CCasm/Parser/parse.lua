@@ -5,12 +5,12 @@ local instructions, keywords = require "CCasm.util.consts" ()
 
 local nest = {}
 
-function parse(tokens, error_reporter)
+function parse(tokens)
     local function sub_parse(tokens)
-        nest:insert(register['ip'])
+        table.insert(nest, register['ip'])
         register['ip'] = 1
         parse( tokens )
-        register['ip'] = nest:remove()
+        register['ip'] = table.remove(nest)
     end
 
     local function rev(t)
@@ -57,7 +57,7 @@ function parse(tokens, error_reporter)
 
     local function jmp_line(line)
         if line > tokens[#tokens].line then
-            error("Jump out of bounds", 0)
+            report(line, "Jump out of bounds")
         end
         for k, v in ipairs(tokens) do
             if v.line == line then
@@ -70,7 +70,7 @@ function parse(tokens, error_reporter)
     local function handle_jump(i, val)
         if isRegister(val.lexeme) then
             if type(register[val.lexeme]) == 'table' then
-                if register[val.lexeme].type == 'NULL' then error("[Line: " .. i.line  .. "] Cannont jump to NULL", 0) end
+                if register[val.lexeme].type == 'NULL' then report(i.line, "Cannot jump to NULL") end
             end
             jmp_line(register[val.lexeme])
         elseif labels[val.lexeme] then
@@ -78,12 +78,12 @@ function parse(tokens, error_reporter)
         elseif val.type == 'NUMBER' then
             jmp_line(val.literal)
         else
-            error("[Line: " .. i.line  .. "] Instruction " .. i.type .. " expects type of register, number, or label", 0)
+            report(i.line, "Instruction " .. i.type .. " expects type of register, number, or label")
         end
     end
 
 
-    while register['ip'] <= #tokens do
+    while register['ip'] <= #tokens and not had_error do
         local i = advance()
         if i.type == instructions['set'] then
             local reg = advance()
@@ -112,7 +112,7 @@ function parse(tokens, error_reporter)
             elseif val.type == 'NUMBER' then
                 table.insert(stack, val.literal)
             else
-                error("[Line: " .. i.line  .. "] Instruction " .. i.type .. " expects type of register or number", 0)
+                report(i.line, "Instruction " .. i.type .. " expects type of register or number", 0)
             end
         elseif i.type == instructions['pop'] then
             table.remove(stack)
@@ -126,7 +126,7 @@ function parse(tokens, error_reporter)
             local reg = advance()
             assertRegister(reg.lexeme)
             if type(register[reg.lexeme]) == 'table' then
-                if register[reg.lexeme].type == 'NULL' then error("[Line: " .. i.line  .. "] Cannont store type NULL", 0) end
+                if register[reg.lexeme].type == 'NULL' then report(i.line,  "Cannont store type NULL") end
             end
             table.insert(stack, register[reg.lexeme])
             register[reg.lexeme] = Token('NULL')
@@ -167,7 +167,7 @@ function parse(tokens, error_reporter)
             elseif val.type == 'NUMBER' then
                 table.insert(stack, val.literal == register[reg.lexeme] and 1 or 0)
             else
-                error("[Line: " .. i.line  .. "] Instruction " .. i.type .. " expects type of register or number", 0)
+                report(i.line, "Instruction " .. i.type .. " expects type of register or number")
             end
         elseif i.type == instructions['jmp'] then
             local val = advance()
@@ -190,7 +190,7 @@ function parse(tokens, error_reporter)
             elseif val.type == 'NUMBER' then
                 sleep(val.literal)
             else
-                error("[Line: " .. i.line  .. "] Instruction " .. i.type .. " expects type of register or number", 0)
+                report(i.line, "Instruction " .. i.type .. " expects type of register or number")
             end
         elseif i.type == instructions['utc'] then
             local reg = advance()
@@ -203,7 +203,7 @@ function parse(tokens, error_reporter)
             elseif val.type == 'NUMBER' then
                 write(string.char(val.literal))
             else
-                error("[Line: " .. i.line  .. "] Instruction " .. i.type .. " expects type of register or number", 0)
+                report(i.line, "Instruction " .. i.type .. " expects type of register or number")
             end
         elseif i.type == instructions['out'] then
             local val = advance()
@@ -212,18 +212,18 @@ function parse(tokens, error_reporter)
             elseif val.type == 'NUMBER' then
                 write(val.literal)
             else
-                error("[Line: " .. i.line  .. "] Instruction " .. i.type .. " expects type of register or number", 0)
+                report(i.line, "Instruction " .. i.type .. " expects type of register or number")
             end
         elseif i.type == instructions['dmp'] then
             printt( rev(stack) )
         elseif i.type == instructions['imp'] then
             local file = advance()
-            if file.type ~= 'STRING' then error("[Line: " .. i.line  .. "] Instruction " .. i.type .. " expects type of string", 0) end
-            if fs.isDir(file.literal) or not fs.exists(file.literal) then error("[Line: " .. i.line  .. "] Could not import file " .. file.literal, 0) end
+            if file.type ~= 'STRING' then report(i.line, "Instruction " .. i.type .. " expects type of string") end
+            if fs.isDir(file.literal) or not fs.exists(file.literal) then report(i.line, "Could not import file " .. file.literal) end
             local h = fs.open(file.literal, 'r')
             local code = h.readAll()
             h.close()
-            sub_parse(lex(code, error_reporter))
+            sub_parse(lex(code))
         elseif i.type == instructions['hlt'] then
             break
         elseif i.type == 'LABEL' then
@@ -246,7 +246,7 @@ function parse(tokens, error_reporter)
             end
             macros[name.lexeme] = m
         elseif i.type == 'MACRO' then
-            if not macros[i.lexeme] then error("[Line: " .. i.line  .. "] Undefined macro " .. i.lexeme, 0) end
+            if not macros[i.lexeme] then report(i.line, "Undefined macro " .. i.lexeme) end
             if macros[i.lexeme].count > 0 then
                 local args = {}
                 for _ = 1, macros[i.lexeme].count do
@@ -266,7 +266,7 @@ function parse(tokens, error_reporter)
 
             sub_parse( macros[i.lexeme].body )
         else
-            error("[Line: " .. i.line  .. "] Unexpected " .. i.type .. " " .. i.lexeme, 0)
+            report(i.line, "Unexpected " .. i.type .. " " .. i.lexeme)
         end
     end
 end

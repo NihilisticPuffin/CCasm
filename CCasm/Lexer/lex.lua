@@ -2,7 +2,7 @@ local Token = require "CCasm.Lexer.Token"
 local switch = require "CCasm.util.switch"
 local instructions, keywords = require "CCasm.util.consts" ()
 
-return function(source, error_reporter)
+return function(source)
     local start = 1
     local current = 1
     local line = 1
@@ -120,7 +120,7 @@ return function(source, error_reporter)
                 elseif is_alpha(c) or c == '_' then
                     add_identifier()
                 else
-                    error_reporter(line, 'Unexpected character.')
+                    report(line, 'Unexpected character.')
                 end
             end
         })
