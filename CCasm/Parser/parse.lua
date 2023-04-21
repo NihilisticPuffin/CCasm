@@ -167,7 +167,7 @@ function parse(tokens)
             elseif val.type == 'NUMBER' then
                 table.insert(stack, val.literal == register[reg.lexeme] and 1 or 0)
             elseif val.type == 'NULL' then
-                table.insert(stack, Token('NULL') == register[reg.lexeme] and 1 or 0)
+                table.insert(stack, 'NULL' == register[reg.lexeme].type and 1 or 0)
             else
                 report(i.line, "Instruction " .. i.type .. " expects type of register or number")
             end
