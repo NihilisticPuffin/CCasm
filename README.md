@@ -290,3 +290,5 @@ exit:
 
 # TODO
 - [ ] Replace `imp` instruction with `#import` preprocessor command
+- [ ] Add bit shift instructions (`shl` and `shr`)
+- [ ] Add bitwise instructions (`bor`, `xor`, `and`, `not`)
