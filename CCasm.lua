@@ -27,7 +27,7 @@ end
 local function repl()
     while not had_error do
         write(">: ")
-        input = read()
+        local input = read()
         register['ip'] = 1
         parse( lex(input) )
     end
