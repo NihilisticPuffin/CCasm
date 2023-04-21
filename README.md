@@ -51,7 +51,7 @@ The `out a` instruction will be skipped by the `jeq skip`
 Numbers in CCasm can be represented as any real number (Ex: 5, 3.14, -15) or as a hexideciaml number using a dollar sign (Ex: $FA, $B08A)
 
 ## Strings
-CCasm currently has partial support for strings using double quotes ("), however strings may not behave properly in certain situations
+CCasm currently has partial support for strings using double quotes ("), however strings may not behave properly in certain situations as they are currently only intended to work with the import instruction
 
 ## Macros
 Macros can be used as simple function calls or to create things such as for and while loops (See: [libs/loops.asm](https://github.com/NihilisticPuffin/CCasm/blob/main/libs/loops.asm))
