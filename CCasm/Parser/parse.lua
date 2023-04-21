@@ -174,7 +174,7 @@ function parse(tokens)
             handle_jump(i, val)
         elseif i.type == instructions['jeq'] then
             local val = advance()
-            local cond table.remove(stack)
+            local cond = table.remove(stack)
             if cond ~= 0 and cond ~= nil then
                 handle_jump(i, val)
             end
