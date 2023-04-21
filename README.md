@@ -16,6 +16,7 @@ An interpreted assembly-like language for computercraft
 | add | Add | Pops the top two values off the stack, adds them and pushes the result onto the stack |
 | sub | Subtract | Pops the top two values off the stack, subtracts them and pushes the result onto the stack |
 | mul | Multiply | Pops the top two values off the stack, multiplies them and pushes the result onto the stack |
+| pow | Power | Pops the top two values off the stack, raised the second value to the power of the first and pushes the result onto the stack |
 | div | Divide | Pops the top two values off the stack, divides them and pushes the result onto the stack |
 | mod | Modulo | Pops the top two values off the stack, preforms a modulo operation and pushes the result onto the stack |
 | cmp [reg] [reg:val] | Compare | Compares the value of a register with another register or value |

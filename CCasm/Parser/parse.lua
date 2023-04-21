@@ -146,6 +146,10 @@ function parse(tokens, error_reporter)
             local b = table.remove(stack)
             local a = table.remove(stack)
             table.insert(stack, a * b)
+        elseif i.type == instructions['pow'] then
+            local b = table.remove(stack)
+            local a = table.remove(stack)
+            table.insert(stack, a ^ b)
         elseif i.type == instructions['div'] then
             local b = table.remove(stack)
             local a = table.remove(stack)

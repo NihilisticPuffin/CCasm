@@ -11,6 +11,7 @@ local instructions = {
     ['add'] = 'ADD',
     ['sub'] = 'SUBTRACT',
     ['mul'] = 'MULTIPLY',
+    ['pow'] = 'POWER',
     ['div'] = 'DIVIDE',
     ['mod'] = 'MODULO',
     ['cmp'] = 'COMPARE',
