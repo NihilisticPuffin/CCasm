@@ -21,6 +21,7 @@ local instructions = {
     ['slp'] = 'SLEEP',
     ['utc'] = 'UTC',
     ['dmp'] = 'DUMP',
+    ['key'] = 'KEY',
     ['chr'] = 'CHARACTER',
     ['out'] = 'OUTPUT',
     ['hlt'] = 'HALT',

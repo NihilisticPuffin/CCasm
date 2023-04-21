@@ -26,6 +26,7 @@ An interpreted assembly-like language for computercraft
 | utc [reg] | UTC | Sets value of register to number of milliseconds since UNIX Epoch |
 | slp [val] | Sleep | Sleeps for given number of seconds |
 | dmp | Dump | Dumps stack to console for debugging |
+| key | Key | Pauses execution until user presses a key then pushes key code onto stack |
 | chr [reg:val] | Character | Outputs the value or register as ASCII character |
 | out [reg:val] | Output | Outputs the value or register |
 | hlt | Halt | Halts the program |

@@ -198,6 +198,9 @@ function parse(tokens)
             local reg = advance()
             assertRegister(reg.lexeme)
             register[reg.lexeme] = os.epoch('utc')
+        elseif i.type == instructions['key'] then
+            local event, key = os.pullEvent("key")
+            table.insert(stack, key)
         elseif i.type == instructions['chr'] then
             local val = advance()
             if isRegister(val.lexeme) then
