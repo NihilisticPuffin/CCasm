@@ -1,6 +1,4 @@
-#register timer_start
-#register timer_end
-#register timer_elapsed
+#register timer_start timer_end timer_elapsed
 
 ; Calculates time in milliseconds between %timer_start and %timer_end being called
 ; and stores the value in the timer_elapsed register

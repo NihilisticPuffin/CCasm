@@ -128,7 +128,9 @@ local function lex(source)
             end
         end
         if keyword == 'register' then
-            register[args[1]] = Token('NULL')
+            for _, value in ipairs(args) do
+                register[value] = Token('NULL')
+            end
         elseif keyword == 'import' then
             if not fs.exists(args[1]) then report(line, "Could not include " .. args[1]) end
             local h = fs.open(args[1], 'r')
