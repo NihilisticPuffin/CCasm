@@ -31,6 +31,29 @@ An interpreted assembly-like language for computercraft
 | imp [string] | Import | Loads file and runs it |
 | hlt | Halt | Halts the program |
 
+## Registers
+CCasm has 5 general purpose registers (a, b, c, d, e) and an instruction pointer register (ip)
+
+The ip register is modified by jump instructions but can also be changed with the set instruction
+```
+; Outputs a in an infinite loop
+set a 1
+out a
+set ip 4 ; Note: The value 4 is used here because the out instuction is the 4th token in the program
+```
+
+## Preprocessor
+Preprocessor commands begin with the hash symbol (#)
+
+There is currently only one preprocessor command
+
+New registers can be dynamicaly created by programs using the `#reg` preprocessor command followed by the register name
+```
+#reg new_register
+set new_register 5
+out new_register ; Outputs 5
+```
+
 ## Comments
 Comments in CCasm can be started with a semicolon (;) and continue until the end of the line
 

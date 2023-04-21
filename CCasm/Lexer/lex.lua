@@ -96,6 +96,23 @@ return function(source)
         add_token(keywords[text] or 'MACRO')
     end
 
+    local function pre_proc()
+        local args = {}
+        start = current
+        while is_alphanumeric(peek()) do advance() end
+        local keyword = source:sub(start, current - 1)
+
+        while peek() ~= '\n' and not at_end() do
+            advance() --Consume Space
+            start = current
+            while is_alphanumeric(peek()) do advance() end
+            table.insert(args, source:sub(start, current - 1))
+        end
+        if keyword == 'reg' then
+            register[args[1]] = Token('NULL')
+        end
+    end
+
     local function hex_number()
         start = current
         while is_hex(peek()) do advance() end
@@ -108,6 +125,7 @@ return function(source)
             [';'] = consume_comment,
             ['"'] = add_string,
             ['%'] = add_macro,
+            ['#'] = pre_proc,
             ['$'] = hex_number,
             ['-'] = add_number,
             [' '] = load'',
