@@ -40,7 +40,7 @@ The ip register is modified by jump instructions but can also be changed with th
 ; Outputs a in an infinite loop
 set a 1
 out a
-set ip 4 ; Note: The value 4 is used here because the out instuction is the 4th token in the program
+set ip 4 ; Note: The value 4 is used because the out instuction is the 4th token in the program
 ```
 
 ## Preprocessor
