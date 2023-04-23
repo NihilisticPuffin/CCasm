@@ -298,6 +298,6 @@ exit:
 ```
 
 # TODO
-- [x] Replace `imp` instruction with `#import` preprocessor command
+- [x] Replace `imp` instruction with `#import` preprocessor command [9d324ff](https://github.com/NihilisticPuffin/CCasm/commit/9d324fffbef2c7f2d8127c937b5ae83141609f48)
 - [ ] Add bit shift instructions (`shl` and `shr`)
 - [ ] Add bitwise instructions (`bor`, `xor`, `and`, `not`)

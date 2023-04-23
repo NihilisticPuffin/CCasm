@@ -52,6 +52,7 @@ function parse(tokens)
     for i, v in ipairs(tokens) do
         if v.type == 'LABEL' then
             labels[v.lexeme] = i
+            table.remove(tokens, i)
         end
     end
 
@@ -246,7 +247,6 @@ function parse(tokens)
             printt( rev(stack) )
         elseif i.type == instructions['hlt'] then
             break
-        elseif i.type == 'LABEL' then
         elseif i.type == 'START' then
             local name = advance()
             local argc = nil
